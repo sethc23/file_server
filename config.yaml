@@ -1,0 +1,16 @@
+
+target_folder: "/home/ub1/SERVER1/file_server/docs"
+default_folder: "/home/ub1/SERVER1/file_server/docs/outbox"
+original_move_folder: "/home/ub1/SERVER1/file_server/docs/originals"
+
+watch:
+    scan_interval: 3 # default: 3
+
+tesseract:
+    threads: 8
+
+#ghostscript:
+#    binary: "/usr/local/bin/gs"
+
+preprocess:
+    threads: 8
