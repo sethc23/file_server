@@ -1,16 +1,28 @@
+gmail:
+    username:           ""
+    pw:                 ""
+    attachments_dir:    "/home/ub2/.gmail/attachments/"
 
-target_folder: "/home/ub1/SERVER1/file_server/docs"
-default_folder: "/home/ub1/SERVER1/file_server/docs/outbox"
-original_move_folder: "/home/ub1/SERVER1/file_server/docs/originals"
+
+pgsql:
+    DB_NAME:            "system"
+    DB_HOST:            "0.0.0.0"
+    DB_PORT:            8800
+    DB_USER:            "postgres"
+    DB_PW:              ""
+
+target_folder:          "/home/ub2/SERVER2/file_server/docs"
+default_folder:         "/home/ub2/SERVER2/file_server/docs/outbox"
+original_move_folder:   "/home/ub2/SERVER2/file_server/docs/originals"
 
 watch:
-    scan_interval: 3 # default: 3
+    scan_interval:      3 # default: 3
 
 tesseract:
-    threads: 8
+    threads:            8
 
 #ghostscript:
 #    binary: "/usr/local/bin/gs"
 
 preprocess:
-    threads: 8
+    threads:            8
