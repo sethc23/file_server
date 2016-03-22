@@ -1,0 +1,4 @@
+comment = 'PL/sh procedural language'
+default_version = 3
+relocatable = true
+superuser = true

@@ -48,27 +48,52 @@ class FileServer:
                 self.T.update(                  {k                          :   eval(k) })
         self.T.update(                          self.PG.T.__dict__)
         
-    def _check_config(self,verbose=True):
-        # self.PG.F.functions_run_confirm_extensions(exts=['plpythonu','pllua','plsh'],verbose=verbose)
+    def _check_and_build_pgsql(self,verbose=True):
+        self.PG.F.functions_run_confirm_extensions(exts=['plpythonu','pllua','plshu'],verbose=verbose)
         
-        # self.PG.F.triggers_create_z_auto_add_primary_key()
-        # self.PG.F.triggers_create_z_auto_add_last_updated_field()
-        # self.PG.F.functions_create_batch_groups(sub_dir='sql_exts',
-        #                                         grps=['gmail_tables'],
-        #                                         files=['1_gmail.sql'])
-        pass
+        # Standard Triggers
+        self.PG.F.triggers_create_z_auto_add_primary_key()
+        self.PG.F.triggers_create_z_auto_add_last_updated_field()
+        self.PG.F.triggers_create_z_array_sort()
+        self.PG.F.functions_create_batch_groups(sub_dir='----',
+                                                grps=['json'],
+                                                files=['all'])
+        # Basic table for gmail
+        self.PG.F.functions_create_batch_groups(sub_dir='../sql_exts',
+                                                grps=['gmail_tables'],
+                                                files=['1_gmail.sql'])
+        # File Index Table
+        self.PG.F.functions_create_batch_groups(sub_dir='../sql_exts',
+                                                grps=['file_tables'],
+                                                files=['all'])
+        # File Server Functions
+        self.PG.F.functions_create_batch_groups(sub_dir='../sql_exts',
+                                                grps=['functions'],
+                                                files=['all'])
 
+        # File Server Triggers
+        self.PG.F.functions_create_batch_groups(sub_dir='../sql_exts',
+                                                grps=['triggers'],
+                                                files=['all'])
 
+    def _delete_all_pgsql(self,confirm=True):
+        qry = """
+            DROP TABLE IF EXISTS file_idx;
+            DROP FUNCTION IF EXISTS zf_pdf_metadata( TEXT ) CASCADE;
 
-    @arg()
+            """
+        # self.T.to_sql(qry)
+
     def all_gmail(self):
         """syncs gmail"""
         if not self.config:
             self.config = self._init_config_()
             self.pgsql = self._init_pgsql_()
         from google_tools.google_main import Google
-        G = Google(self,**self.config.gmail.__dict__)
-        G.Gmail.all_mail()
+        G = Google(self,**self.T.config.gmail.__dict__)
+        # G.Gmail.all_mail(method='full')
+        G.Gmail.all_mail(method='quick')
+
 
 
 if __name__ == '__main__':
