@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/home/ub2/SERVER2/file_server/crons
+
+at -f `pwd`/update_gmail NOW

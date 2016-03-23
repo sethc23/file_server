@@ -1,5 +1,6 @@
 # File Server
 
+
 |STEPS||ElasticSearch|gmail|file_idx|OCR_SERVER|Method|
 |---:|:---
 |1|new email message (no attachment)|||||cron: ~/file_server all_gmail|
@@ -18,6 +19,17 @@
 sudo apt-get update
 sudo apt-get install -y tesseract-ocr
 pip install pypdfocr
+
+## Remote File_Server Install
+
+~~~bash
+sudo apt-get install -y build-essentials make openjdk-7-jre-headless
+
+wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+echo "deb http://packages.elastic.co/kibana/4.4/debian stable main" | sudo tee -a /etc/apt/sources.list.d/kibana-4.4.x.list
+
+
+~~~
 
 ### Integrations
 

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# /home/ub2/.virtualenvs/devenv/bin/activate
+
+cd /home/ub2/SERVER2/file_server
+
+/home/ub2/.virtualenvs/devenv/bin/python -c 'from __init__ import *; import file_server as F; f=F.FileServer(); f.all_gmail()' < /dev/null > /tmp/gmail 2>&1
