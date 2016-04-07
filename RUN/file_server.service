@@ -1,0 +1,13 @@
+[Unit]
+Description=File Server
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+PIDFile=/home/ub1/SERVER1/file_server/RUN/file_server.pid
+WorkingDirectory=/home/ub1/SERVER1/file_server/RUN
+ExecStart=/home/ub1/SERVER1/file_server/RUN/run_file_server &
+ExecStop=/bin/kill -s QUIT $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+

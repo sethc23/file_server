@@ -1,0 +1,44 @@
+#!/bin/bash
+
+USER="ub1"
+HOME="/home/$USER"
+SERV_HOME="$HOME/SERVER1"
+
+_loc="$SERV_HOME/file_server"
+CMD="sudo pypdfocr -w $_loc/docs/inbox -f -c $_loc/config.yaml -x $_loc/ws_return.bash"
+PID_FILE="$_loc/RUN/file_server.pid"
+LOG_FILE="/var/log/syslogs/supervisor.log"
+LOG_PREFIX="File_Server"
+MSG_PREFIX="$LOG_PREFIX "`date +'%Y-%m-%d %H:%M:%S%z'`" INFO:"
+
+CPU_LIMIT=$(cat $HOME/.scripts/system_settings.py | \
+    grep -i -E '^[[:space:]]*FILE_SERVER_CPU_LIMIT' | \
+    sed -r 's/[^=]*=//g' | awk '{print $1}')
+
+trap "sudo kill -9 $SHELL_PID" TERM INT
+$CMD | /usr/bin/stdbuf -i0 -o0 -e0 sed "s/^/$LOG_PREFIX /" >> "$LOG_FILE" 2>&1 &
+SHELL_PID=$!
+while [[ -z "$(pgrep pypdfocr)" ]]; do sleep 1; done
+CHILD="$(pgrep pypdfocr)"
+PARENT="$(ps -o ppid= -p $CHILD)"
+
+echo "$PARENT" > $PID_FILE
+
+cpulimit --pid=$CHILD --limit=$CPU_LIMIT > /dev/null 2>&1 &
+CPU_LIMIT_PID=$!
+sh -c "echo \"$MSG_PREFIX success: $LOG_PREFIX with cpu-limit=$CPU_LIMIT\" >> $LOG_FILE"
+
+wait $SHELL_PID
+sudo kill -9 "$CHILD"
+sudo kill -9 "$PARENT"
+sudo sh -c "echo \"$MSG_PREFIX stopped: $LOG_PREFIX with cpu-limit=$CPU_LIMIT\" >> $LOG_FILE"
+
+
+EXIT_STATUS=$?
+
+
+
+
+
+
+
