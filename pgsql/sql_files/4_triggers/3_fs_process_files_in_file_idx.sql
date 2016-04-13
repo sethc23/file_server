@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION fs_process_files_in_file_idx()
+CREATE OR REPLACE FUNCTION fs_process_files_in_file_idx() 
   RETURNS trigger AS
 $BODY$
 

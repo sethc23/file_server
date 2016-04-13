@@ -7,6 +7,5 @@ CREATE TABLE file_idx (
     _filetype           TEXT,
     _info               JSONB,
     _run_ocr            BOOLEAN DEFAULT FALSE,
-    _metadata           JSONB,
-    _content            TEXT
+    _metadata           JSONB
 );

@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION fs_update_file_idx_on_gmail_update()
+CREATE OR REPLACE FUNCTION fs_update_file_idx_on_gmail_update() 
   RETURNS trigger AS
 $BODY$
 
