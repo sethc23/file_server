@@ -1,12 +1,15 @@
 [submodule "google_tools"]
 	path = google_tools
-	url = https://github.com/sethc23/google_tools.git
+	url = git@github.com:sethc23/google_tools.git
 [submodule "py_classes"]
 	path = py_classes
 	url = https://github.com/sethc23/py_classes.git
 [submodule "sysparse"]
 	path = sysparse
 	url = https://github.com/sethc23/sysparse.git
-[submodule "sysparse"]
+[submodule "pg_classes"]
         path = pgsql/pgsql_base
         url = https://github.com/sethc23/pgsql_base.git
+[submodule "pgsql/pgsql_base"]
+	path = pgsql/pgsql_base
+	url = https://github.com/sethc23/pgsql_base.git
