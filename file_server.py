@@ -1,6 +1,6 @@
 #!/home/ub2/.virtualenvs/devenv/bin/python
 # PYTHON_ARGCOMPLETE_OK
-# _ARC_DEBUG
+# _ARC_DEBUG 
 """
 
 Manages file_server
@@ -37,8 +37,8 @@ class FileServer:
         if not self.config:
             self.config                     =   self._init_config_()
 
-        self.PG                             =   pgSQL(**self.config)
-        self.config                         =   self.PG.T.config
+        self.PG                             =   pgSQL(**self.config['pgsql'])
+        # self.config                         =   self.PG.T.config
         self.T                              =   self.PG.T
 
         all_imports                         =   locals().keys()
@@ -91,12 +91,12 @@ class FileServer:
             self.pgsql = self._init_pgsql_()
         from google_tools.google_main import Google
         G = Google(self,**self.T.config.gmail.__dict__)
-        # G.Gmail.all_mail(method='full')
-        G.Gmail.all_mail(method='quick')
+        G.Gmail.all_mail(method='full')
+        # G.Gmail.all_mail(method='quick')
 
 
 
 if __name__ == '__main__':
     
-    run_custom_argparse()
-    # all_gmail()
+    # run_custom_argparse()
+    all_gmail()

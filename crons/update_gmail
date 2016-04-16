@@ -1,7 +1,17 @@
-#!/bin/bash
+#!/home/ub2/.virtualenvs/fileserver/bin/python
 
 # /home/ub2/.virtualenvs/devenv/bin/activate
 
-cd /home/ub2/SERVER2/file_server
+# cd /home/ub2/SERVER2/file_server
 
-/home/ub2/.virtualenvs/devenv/bin/python -c 'from __init__ import *; import file_server as F; f=F.FileServer(); f.all_gmail()' < /dev/null > /tmp/gmail 2>&1
+# /home/ub2/.virtualenvs/devenv/bin/python -c 'from __init__ import *; import file_server as F; f=F.FileServer(); f.all_gmail()'
+ # < /dev/null > /tmp/gmail 2>&1
+
+import os
+os.chdir('/home/ub2/SERVER2/file_server')
+import sys
+sys.path.append('/home/ub2/SERVER2/file_server')
+from __init__ import *
+import file_server as F
+f = F.FileServer()
+f.all_gmail()

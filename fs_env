@@ -1,0 +1,20 @@
+#!/bin/bash
+
+export BASE_DIR="/home/ub2/SERVER2/file_server"
+
+export PGSQL_IP="65.96.175.247:12501"
+export PGSQL_BASE_DIR="/home/ub2/SERVER2/file_server"
+export PGSQL_ATTACHMENTS_DIR="/home/ub2/ARCHIVE/gmail_attachments"
+export GMAIL_ATTACHMENTS_DIR="/home/ub2/ARCHIVE/gmail_attachments"
+export PGSQL_INFO="pgsql_ip=$PGSQL_IP&pgsql_base_dir=$PGSQL_BASE_DIR&pgsql_attachments_dir=$PGSQL_ATTACHMENTS_DIR"
+
+export ES_IP="50.176.131.26:12501"
+export ES_INFO="es_ip=$ES_IP"
+
+export PDF_OCR_IP="50.176.131.26:12501"
+export PDF_OCR_INBOX_DIR="/home/ub1/SERVER1/file_server/docs/inbox"
+export PDF_OCR_INFO="pdf_ocr_ip=$PDF_OCR_IP&pdf_ocr_inbox_dir=$PDF_OCR_INBOX_DIR"
+
+export SERVICES_INFO="$PGSQL_INFO&$ES_INFO&$PDF_OCR_INFO"
+
+export WS_URL="http://localhost:12501"

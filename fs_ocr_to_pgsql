@@ -1,0 +1,77 @@
+#!/bin/bash
+# $0 script
+# $1 _uid
+# $2 _file
+# $3 _attachment_dir
+
+source /home/ub2/SERVER2/file_server/fs_env
+
+LOG_TAG="fs_ocr_to_pgsql"
+# logger -i --priority info --tag $LOG_TAG -- "env: "$(env|sort)
+logger -i --priority info --tag $LOG_TAG -- "args0: $0"
+logger -i --priority info --tag $LOG_TAG -- "args1: $1"
+logger -i --priority info --tag $LOG_TAG -- "args2: $2"
+logger -i --priority info --tag $LOG_TAG -- "args3: $3"
+
+send_doc_for_ocr(){
+    UUID="$(uuidgen)"
+    UPDATE_INFO="uid=$SRC_UID&filename=$FILE&filepath=$FPATH&uuid=$UUID"
+    DEST_INFO="data_type=file&service_dest=pdf_ocr"
+    GET_URL="$WS_URL/send?$SERVICES_INFO&$UPDATE_INFO&$DEST_INFO"
+    logger -i --priority info --tag $LOG_TAG -- "GET_URL: $GET_URL"
+    curl -s $GET_URL
+    }
+
+get_html_content(){
+    UUID=$(uuidgen)
+    pdftohtml -f $1 -l $1 -s -q -i $2 /tmp/$UUID
+    mv "/tmp/"$UUID"-html.html" $3
+    rm "/tmp/"$UUID"s.html"
+    }
+
+# TEST
+# SRC_UID="8510514b055443a5ab79f5ec98efb41a"
+# FILE="8510514b055443a5ab79f5ec98efb41a_ocr.pdf"
+# ATTACHMENTS_DIR="/home/ub2/ARCHIVE/gmail_attachments"
+
+SRC_UID="$1"
+FILE="$2"
+ATTACHMENTS_DIR="$3"
+FPATH="$ATTACHMENTS_DIR/$FILE"
+TMP_DIR="/tmp"
+
+LOG_TAG="fs_ocr_to_pgsql"
+logger -i --priority info --tag $LOG_TAG -- "args: $@"
+
+ALL_FONTS=$(pdffonts $FPATH | env tail -n +3 | cut -d' ' -f1 | sort | uniq)
+if [[ -z $ALL_FONTS ]]; then
+    [[ -z "$(echo $ | env grep ocr)" ]] && send_doc_for_ocr
+    exit
+fi
+
+PAGE_CNT=$(pdfinfo $FPATH | grep Pages | cut -d \: -f2)
+text_uuid=$(uuidgen)
+html_uuid=$(uuidgen)
+FOUND_TEXT="false"
+PAGE_NUM=1
+while [[ $PAGE_NUM -le $PAGE_CNT ]]; do
+    TEXT_FPATH="$TMP_DIR/$text_uuid""$PAGE_NUM"
+    HTML_FPATH="$TMP_DIR/$html_uuid""$PAGE_NUM"
+    pdftotext -q -f $PAGE_NUM -l $PAGE_NUM $FPATH $TEXT_FPATH
+    if [[ "$(cat $TEXT_FPATH | tr -d '[:space:]' | wc -m)" != "0" ]]; then
+        FOUND_TEXT="true"
+        get_html_content $PAGE_NUM $FPATH $HTML_FPATH
+        QRY="INSERT INTO file_content(src_db,src_uid,plain_text,html_text,pg_num)
+            SELECT 
+                'file_idx' src_db,
+                '$SRC_UID'::integer src_uid,
+                zf_readfile('$TEXT_FPATH'::text) plain_text,
+                zf_readfile('$HTML_FPATH'::text) html_text,
+                '$PAGE_NUM'::integer pg_num;"
+
+        logger -i --priority info --tag $LOG_TAG -- "QRY: $(echo $QRY | tr -d '\n\t')"
+        echo "{\"qry\": \"$QRY\"}" | curl -s -d @- "http://localhost:12501/query"
+    fi
+    PAGE_NUM=$[$PAGE_NUM+1]
+done
+
