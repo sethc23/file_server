@@ -31,7 +31,7 @@ sh -c "echo \"$MSG_PREFIX success: $LOG_PREFIX with cpu-limit=$CPU_LIMIT\" >> $L
 wait $SHELL_PID
 sudo kill -9 "$CHILD"
 sudo kill -9 "$PARENT"
-sudo sh -c "echo \"$MSG_PREFIX stopped: $LOG_PREFIX with cpu-limit=$CPU_LIMIT\" >> $LOG_FILE"
+sh -c "echo \"$MSG_PREFIX stopped: $LOG_PREFIX with cpu-limit=$CPU_LIMIT\" >> $LOG_FILE"
 
 
 EXIT_STATUS=$?
